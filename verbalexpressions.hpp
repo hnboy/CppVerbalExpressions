@@ -28,13 +28,8 @@
 #define VERBAL_EXPRESSIONS_H_
 
 
-#ifdef USE_BOOST
-#include <boost/regex.hpp>
-namespace veregex = boost;
-#else
 #include <regex>
 namespace veregex = std;
-#endif
 
 #include <iostream>
 #include <string>
@@ -102,26 +97,40 @@ public:
         return (*this);
     }
 
-    verex & start_of_line(const bool enable)
+
+
+    verex & start_of_line(const std::string & value)
     {
-        prefixes = enable ? "^" : "";
+        prefixes = "^" + value;
         return add("");
     }
 
     verex & start_of_line()
     {
-        return start_of_line(true);
+        prefixes = "^";
+        return add("");
     }
 
+    verex & end_of_line(const std::string &value)
+    {
+        std::cout << "add this item" << std::endl;
+        suffixes =  value + "$";
+        return add("");
+    }
+
+    /*
     verex & end_of_line(const bool enable)
     {
         suffixes = enable ? "$" : "";
         return add("");
     }
+    */
 
     verex & end_of_line()
     {
-        return end_of_line(true);
+        suffixes = "$" ;
+        return add("");
+        //return end_of_line(true);
     }
 
     verex & then(const std::string & value)
@@ -331,16 +340,18 @@ public:
         return then(value);
     }
 
-    bool test(const std::string & value)
+    bool match(const std::string & value)
     {
         const std::string to_test = (modifiers & MULTILINE) ? value : reduce_lines(value);
 
         if (modifiers & GLOBAL) {
             return veregex::regex_search(to_test, veregex::regex(pattern, check_flags()));
         } else {
+            std::cout<< "Debug Pattern=" << pattern << std::endl;
             return veregex::regex_match(to_test, veregex::regex(pattern, check_flags()));
         }
     }
+
 };
 
 } // namespace verex
