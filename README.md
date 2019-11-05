@@ -82,9 +82,11 @@ auto expr = verex();
 * .something()
 * .something_but(const std::string & value)
 * .end_of_line()
+* .end_of_line(const std::string & value)
 * .find( const std::string & value )
 * .maybe( const std::string & value )
 * .start_of_line()
+* .start_of_line(const std::string & value)
 * .then( const std::string & value )
 
 ### Special characters and groups
